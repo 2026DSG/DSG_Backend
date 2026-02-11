@@ -3,6 +3,7 @@ package example.dsg_be.domain.teacher.presentation;
 import example.dsg_be.domain.teacher.presentation.dto.request.TeacherRequest;
 import example.dsg_be.domain.teacher.presentation.dto.response.TeacherResponse;
 import example.dsg_be.domain.teacher.service.*;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
@@ -43,7 +44,7 @@ public class TeacherController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void addTeacher(@RequestBody TeacherRequest teacherRequest) {
+    public void addTeacher(@Valid @RequestBody TeacherRequest teacherRequest) {
         teacherAddService.execute(teacherRequest);
     }
 
@@ -60,7 +61,7 @@ public class TeacherController {
     }
 
     @GetMapping("/excel")
-    public ResponseEntity<Resource> downloadExcel() throws IOException { // TODO: Exception 대신 어노테이션 고려
+    public ResponseEntity<Resource> downloadExcel() throws IOException {
         byte[] content = teacherExcelDownloadService.execute(); // 서비스에서 받아온 값을
         ByteArrayResource resource = new ByteArrayResource(content); // byte 배열로 body에 넣을 값을 변환 해준다.
 

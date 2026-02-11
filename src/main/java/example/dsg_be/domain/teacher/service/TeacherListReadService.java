@@ -5,6 +5,7 @@ import example.dsg_be.domain.teacher.repository.TeacherRepository;
 import example.dsg_be.domain.teacher.presentation.dto.response.TeacherResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
@@ -12,18 +13,11 @@ import java.util.List;
 public class TeacherListReadService {
     private final TeacherRepository teacherRepository;
 
+    @Transactional(readOnly = true)
     public List<TeacherResponse> execute() {
-        List<TeacherEntity> teachers = teacherRepository.findAll();
+        List<TeacherEntity> teachers = teacherRepository.findAllByIsRemovedFalse();
 
         return teachers.stream()
-                .map(t -> TeacherResponse.builder()
-                        .id(t.getTeacherId())
-                        .number(t.getNumber())
-                        .department(t.getDepartment())
-                        .position(t.getPosition())
-                        .name(t.getName())
-                        .createdAt(t.getCreatedAt())
-                        .build())
-                .toList(); // 변환된 결과들을 다시 리스트로 만듭니다.
+                .map(TeacherResponse::new).toList(); // new : 생성자 호출
     }
 }
