@@ -21,7 +21,8 @@ public class TeacherAddService {
             TeacherEntity teacher = teacherOptional.get();
             if (!teacher.getIsRemoved()) {
                 throw NameAlreadyExistException.EXCEPTION;
-            } else {
+            }
+            else {
                 Long maxNum = teacherRepository.findMaxNumberByIsRemovedFalse().orElse(0L);
 
                 teacher.update(
@@ -29,10 +30,9 @@ public class TeacherAddService {
                         teacherRequest.getPosition(),
                         maxNum + 1
                 );
-
-                teacherRepository.save(teacher);
             }
-        } else {
+        }
+        else {
             Long maxNum = teacherRepository.findMaxNumberByIsRemovedFalse().orElse(0L);
 
             TeacherEntity newTeacher = TeacherEntity.builder()
