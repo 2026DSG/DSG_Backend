@@ -1,7 +1,6 @@
 package example.dsg_be.domain.apply.presentation.dto.request;
 
 import example.dsg_be.domain.apply.domain.MealType;
-import example.dsg_be.domain.apply.domain.PaymentType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -20,8 +19,4 @@ public class ApplyCreateRequest {
 
     @NotBlank(message = "부서는 필수입니다.")
     private String department;
-
-    @NotNull(message = "결제 타입은 필수입니다.")
-    private PaymentType paymentType;
-
 }

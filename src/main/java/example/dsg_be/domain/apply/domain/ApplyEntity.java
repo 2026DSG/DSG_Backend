@@ -30,10 +30,6 @@ public class ApplyEntity {
     @Column(nullable = false)
     private String department;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private PaymentType paymentType;
-
     @Column(nullable = false)
     private LocalDate applyDate;
 
