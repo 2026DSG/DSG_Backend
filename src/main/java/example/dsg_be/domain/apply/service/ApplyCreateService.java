@@ -36,7 +36,6 @@ public class ApplyCreateService {
                 .reason(request.getReason())
                 .staffName(request.getStaffName())
                 .department(request.getDepartment())
-                .paymentType(request.getPaymentType())
                 .build();
 
         ApplyEntity saved = applyRepository.save(apply);

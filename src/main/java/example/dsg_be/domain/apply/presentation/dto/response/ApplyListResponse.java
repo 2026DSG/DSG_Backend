@@ -2,7 +2,6 @@ package example.dsg_be.domain.apply.presentation.dto.response;
 
 import example.dsg_be.domain.apply.domain.ApplyEntity;
 import example.dsg_be.domain.apply.domain.MealType;
-import example.dsg_be.domain.apply.domain.PaymentType;
 import lombok.Getter;
 
 import java.time.LocalDate;
@@ -16,7 +15,6 @@ public class ApplyListResponse {
     private final String reason;
     private final String staffName;
     private final String department;
-    private final PaymentType paymentType;
     private final LocalDate applyDate;
     private final LocalDateTime createdAt;
 
@@ -26,7 +24,6 @@ public class ApplyListResponse {
         this.reason = apply.getReason();
         this.staffName = apply.getStaffName();
         this.department = apply.getDepartment();
-        this.paymentType = apply.getPaymentType();
         this.applyDate = apply.getApplyDate();
         this.createdAt = apply.getCreatedAt();
     }
