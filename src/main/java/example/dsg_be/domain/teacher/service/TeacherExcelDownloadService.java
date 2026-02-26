@@ -37,7 +37,7 @@ public class TeacherExcelDownloadService {
             for (int i = 0; i < headers.length; i++) {
                 Cell cell = headerRow.createCell(i);
                 cell.setCellValue(headers[i]);
-                cell.setCellStyle(headerStyle); // 헤더 스타일 적용
+                cell.setCellStyle(headerStyle); // 헤더 스 타일 적용
             }
 
             sheet.setColumnWidth(0, (int) (8.3 * 256));

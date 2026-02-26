@@ -1,5 +1,6 @@
 package example.dsg_be.domain.apply.service;
 
+import example.dsg_be.domain.apply.domain.ApplyEntity;
 import example.dsg_be.domain.apply.exception.ApplyNotFoundException;
 import example.dsg_be.domain.apply.repository.ApplyRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,10 +14,9 @@ public class ApplyDeleteService {
     private final ApplyRepository applyRepository;
 
     @Transactional
-    public void delete(Long applyId) {
-        if (!applyRepository.existsById(applyId)) {
-            throw new ApplyNotFoundException();
-        }
-        applyRepository.deleteById(applyId);
+    public void execute(Long applyId) {
+        ApplyEntity applyEntity = applyRepository.findById(applyId)
+                .orElseThrow(() -> ApplyNotFoundException.EXCEPTION);
+        applyRepository.delete(applyEntity);
     }
 }

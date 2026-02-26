@@ -1,44 +1,40 @@
 package example.dsg_be.domain.apply.domain;
 
+import example.dsg_be.domain.teacher.domain.TeacherEntity;
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "apply")
-@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
-@Builder
+@Getter
+@Table(name = "apply_tbl")
 public class ApplyEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "apply_id", nullable = false)
+    private Long applyId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "teacher_id", nullable = false)
+    private TeacherEntity teacher;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private MealType mealType;
+    @Column(name = "meal", nullable = false)
+    private MealType meal;
 
-    @Column(nullable = false)
+    @Column(name = "reason", nullable = false)
     private String reason;
 
-    @Column(nullable = false)
-    private String staffName;
-
-    @Column(nullable = false)
-    private String department;
-
-    @Column(nullable = false)
-    private LocalDate applyDate;
-
-    @Column(nullable = false)
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
-    @PrePersist
-    public void prePersist() {
+    @Builder
+    public ApplyEntity(TeacherEntity teacher, MealType meal, String reason) {
+        this.teacher = teacher;
+        this.meal = meal;
+        this.reason = reason;
         this.createdAt = LocalDateTime.now();
-        this.applyDate = LocalDate.now();
     }
 }

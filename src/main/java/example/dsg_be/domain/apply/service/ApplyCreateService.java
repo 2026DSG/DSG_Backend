@@ -3,10 +3,12 @@ package example.dsg_be.domain.apply.service;
 import example.dsg_be.domain.apply.domain.ApplyEntity;
 import example.dsg_be.domain.apply.domain.MealType;
 import example.dsg_be.domain.apply.exception.AlreadyAppliedException;
-import example.dsg_be.domain.apply.presentation.dto.request.*;
-import example.dsg_be.domain.apply.presentation.dto.response.*;
+import example.dsg_be.domain.apply.presentation.dto.request.ApplyCreateRequest;
 import example.dsg_be.domain.apply.presentation.dto.response.ApplyCreateResponse;
 import example.dsg_be.domain.apply.repository.ApplyRepository;
+import example.dsg_be.domain.teacher.domain.TeacherEntity;
+import example.dsg_be.domain.teacher.exception.TeacherNotFoundException;
+import example.dsg_be.domain.teacher.repository.TeacherRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,27 +20,38 @@ import java.time.LocalTime;
 @RequiredArgsConstructor
 public class ApplyCreateService {
 
-    private static final LocalTime LUNCH_START = LocalTime.of(6, 40);
+    private static final LocalTime LUNCH_START = LocalTime.of(18, 40);
     private static final LocalTime DINNER_START = LocalTime.of(13, 30);
 
     private final ApplyRepository applyRepository;
+    private final TeacherRepository teacherRepository;
 
     @Transactional
-    public ApplyCreateResponse create(ApplyCreateRequest request) {
-        MealType mealType = resolveMealType(request.getMealType());
+    public ApplyCreateResponse execute(ApplyCreateRequest request) {
+        TeacherEntity teacher = teacherRepository.findById(request.getTeacherId())
+                .orElseThrow(() -> TeacherNotFoundException.EXCEPTION);
 
-        if (applyRepository.existsByApplyDateAndMealType(LocalDate.now(), mealType)) {
-            throw new AlreadyAppliedException();
+        MealType meal = resolveMealType(request.getMeal());
+
+        LocalDate today = LocalDate.now();
+        boolean alreadyApplied = applyRepository.existsByTeacherAndMealAndCreatedAtBetween(
+                teacher,
+                meal,
+                today.atStartOfDay(),
+                today.atTime(LocalTime.MAX)
+        );
+
+        if (alreadyApplied) {
+            throw AlreadyAppliedException.EXCEPTION;
         }
 
-        ApplyEntity apply = ApplyEntity.builder()
-                .mealType(mealType)
+        ApplyEntity applyEntity = ApplyEntity.builder()
+                .teacher(teacher)
+                .meal(meal)
                 .reason(request.getReason())
-                .staffName(request.getStaffName())
-                .department(request.getDepartment())
                 .build();
 
-        ApplyEntity saved = applyRepository.save(apply);
+        ApplyEntity saved = applyRepository.save(applyEntity);
         return new ApplyCreateResponse(saved);
     }
 
@@ -56,7 +69,7 @@ public class ApplyCreateService {
         if (now.isAfter(LUNCH_START)) {
             return MealType.LUNCH;
         }
-        // 기본값
+
         return MealType.LUNCH;
     }
 }
