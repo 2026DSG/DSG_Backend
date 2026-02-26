@@ -2,14 +2,23 @@ package example.dsg_be.domain.apply.repository;
 
 import example.dsg_be.domain.apply.domain.ApplyEntity;
 import example.dsg_be.domain.apply.domain.MealType;
+import example.dsg_be.domain.teacher.domain.TeacherEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ApplyRepository extends JpaRepository<ApplyEntity, Long> {
 
-    boolean existsByApplyDateAndMealType(LocalDate applyDate, MealType mealType);
+    boolean existsByTeacherAndMealAndCreatedAtBetween(
+            TeacherEntity teacher,
+            MealType meal,
+            LocalDateTime start,
+            LocalDateTime end
+    );
 
-    List<ApplyEntity> findAllByMealTypeOrderByCreatedAtDesc(MealType mealType);
+    List<ApplyEntity> findAllByMealOrderByCreatedAtDesc(MealType meal);
+
+    // 월별 엑셀 다운로드용 기간 조회
+    List<ApplyEntity> findAllByCreatedAtBetween(LocalDateTime start, LocalDateTime end);
 }
