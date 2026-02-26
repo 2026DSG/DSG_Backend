@@ -18,7 +18,4 @@ public interface ApplyRepository extends JpaRepository<ApplyEntity, Long> {
     );
 
     List<ApplyEntity> findAllByMealOrderByCreatedAtDesc(MealType meal);
-
-    // 월별 엑셀 다운로드용 기간 조회
-    List<ApplyEntity> findAllByCreatedAtBetween(LocalDateTime start, LocalDateTime end);
 }
