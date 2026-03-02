@@ -3,7 +3,6 @@ package example.dsg_be.domain.apply.presentation.dto.response;
 import example.dsg_be.domain.apply.domain.ApplyEntity;
 import example.dsg_be.domain.apply.domain.MealType;
 import lombok.Getter;
-
 import java.time.LocalDateTime;
 
 @Getter
