@@ -12,7 +12,6 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -22,8 +21,6 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 public class ApplySummaryExcelService {
-
-    private static final long MEAL_PRICE = 5_500L;
 
     private final ApplyRepository applyRepository;
 
@@ -40,95 +37,72 @@ public class ApplySummaryExcelService {
             throw ApplyNotFoundException.EXCEPTION;
         }
 
-        // 횟수 집계
         Map<TeacherEntity, long[]> summaryMap = new LinkedHashMap<>();
         for (ApplyEntity apply : applyList) {
             TeacherEntity teacher = apply.getTeacher();
-            summaryMap.putIfAbsent(teacher, new long[]{0L, 0L, 0L});
+            summaryMap.putIfAbsent(teacher, new long[]{0L, 0L});
             long[] counts = summaryMap.get(teacher);
 
-            if (apply.getMeal() == MealType.LUNCH) {
+            if (apply.getMeal() == MealType.DINNER) {
                 counts[0]++;
-            } else if (apply.getMeal() == MealType.DINNER) {
+            } else { // DINNER_SELF
                 counts[1]++;
-            } else {
-                counts[2]++; // DINNER_SELF
             }
         }
 
         try (XSSFWorkbook workbook = new XSSFWorkbook()) {
-            XSSFSheet sheet = workbook.createSheet("급식 신청 총괄표");
+            XSSFSheet sheet = workbook.createSheet("총괄표");
 
             CellStyle headerStyle = ExcelUtil.getHeaderStyle(workbook);
             CellStyle bodyStyle = ExcelUtil.getBodyStyle(workbook);
 
-            Row headerRow = sheet.createRow(0);
+            Row titleRow = sheet.createRow(0);
+            titleRow.createCell(0).setCellValue("총괄표");
+
+            Row dateRow = sheet.createRow(1);
+            dateRow.createCell(0).setCellValue(year + "-" + month + "월");
+
+            Row headerRow = sheet.createRow(2);
             headerRow.setHeightInPoints(17.4f);
-            String[] headers = {
-                    "순번", "부서", "직위", "이름",
-                    "중식 횟수", "석식 횟수", "석식(개인) 횟수",
-                    "총 횟수", "결제 예정 금액"
-            };
+            String[] headers = {"부서", "이름", "초과근무", "개인부담"};
             for (int i = 0; i < headers.length; i++) {
                 Cell cell = headerRow.createCell(i);
                 cell.setCellValue(headers[i]);
                 cell.setCellStyle(headerStyle);
             }
 
-            sheet.setColumnWidth(0, (int) (8.3 * 256));
-            sheet.setColumnWidth(1, (int) (13.8 * 256));
-            sheet.setColumnWidth(2, (int) (9.7 * 256));
-            sheet.setColumnWidth(3, (int) (13.4 * 256));
-            sheet.setColumnWidth(4, (int) (10.0 * 256));
-            sheet.setColumnWidth(5, (int) (10.0 * 256));
-            sheet.setColumnWidth(6, (int) (14.0 * 256));
-            sheet.setColumnWidth(7, (int) (10.0 * 256));
-            sheet.setColumnWidth(8, (int) (16.0 * 256));
+            sheet.setColumnWidth(0, (int) (13.8 * 256));
+            sheet.setColumnWidth(1, (int) (13.4 * 256));
+            sheet.setColumnWidth(2, (int) (12.0 * 256));
+            sheet.setColumnWidth(3, (int) (12.0 * 256));
 
-            int rowNum = 1;
-            long grandTotalCount = 0L;
-            long grandTotalAmount = 0L;
+            int rowNum = 3;
+            long grandTotalDinner = 0L;
+            long grandTotalSelf = 0L;
 
             for (Map.Entry<TeacherEntity, long[]> entry : summaryMap.entrySet()) {
                 TeacherEntity teacher = entry.getKey();
-                long lunchCount = entry.getValue()[0];
-                long dinnerCount = entry.getValue()[1];
-                long dinnerSelfCount = entry.getValue()[2];
-                long total = lunchCount + dinnerCount + dinnerSelfCount;
-                long amount = dinnerSelfCount * MEAL_PRICE; // DINNER_SELF만 과금
+                long dinnerCount = entry.getValue()[0];
+                long selfCount = entry.getValue()[1];
 
-                grandTotalCount += total;
-                grandTotalAmount += amount;
+                grandTotalDinner += dinnerCount;
+                grandTotalSelf += selfCount;
 
-                Row dataRow = sheet.createRow(rowNum);
+                Row dataRow = sheet.createRow(rowNum++);
                 dataRow.setHeightInPoints(17.4f);
 
-                ExcelUtil.createCellWithStyle(dataRow, 0, String.valueOf(rowNum), bodyStyle);
-                ExcelUtil.createCellWithStyle(dataRow, 1, teacher.getDepartment(), bodyStyle);
-                ExcelUtil.createCellWithStyle(dataRow, 2, teacher.getPosition(), bodyStyle);
-                ExcelUtil.createCellWithStyle(dataRow, 3, teacher.getName(), bodyStyle);
-                ExcelUtil.createCellWithStyle(dataRow, 4, String.valueOf(lunchCount), bodyStyle);
-                ExcelUtil.createCellWithStyle(dataRow, 5, String.valueOf(dinnerCount), bodyStyle);
-                ExcelUtil.createCellWithStyle(dataRow, 6, String.valueOf(dinnerSelfCount), bodyStyle);
-                ExcelUtil.createCellWithStyle(dataRow, 7, String.valueOf(total), bodyStyle);
-                ExcelUtil.createCellWithStyle(dataRow, 8, amount + "원", bodyStyle);
-
-                rowNum++;
+                ExcelUtil.createCellWithStyle(dataRow, 0, teacher.getDepartment(), bodyStyle);
+                ExcelUtil.createCellWithStyle(dataRow, 1, teacher.getName(), bodyStyle);
+                ExcelUtil.createCellWithStyle(dataRow, 2, String.valueOf(dinnerCount), bodyStyle);
+                ExcelUtil.createCellWithStyle(dataRow, 3, String.valueOf(selfCount), bodyStyle);
             }
 
-            // 하단 합계 행
             Row totalRow = sheet.createRow(rowNum);
             totalRow.setHeightInPoints(17.4f);
-
-            ExcelUtil.createCellWithStyle(totalRow, 0, "", headerStyle);
-            ExcelUtil.createCellWithStyle(totalRow, 1, "", headerStyle);
-            ExcelUtil.createCellWithStyle(totalRow, 2, "", headerStyle);
-            ExcelUtil.createCellWithStyle(totalRow, 3, "합계", headerStyle);
-            ExcelUtil.createCellWithStyle(totalRow, 4, "", headerStyle);
-            ExcelUtil.createCellWithStyle(totalRow, 5, "", headerStyle);
-            ExcelUtil.createCellWithStyle(totalRow, 6, "", headerStyle);
-            ExcelUtil.createCellWithStyle(totalRow, 7, String.valueOf(grandTotalCount), headerStyle);
-            ExcelUtil.createCellWithStyle(totalRow, 8, grandTotalAmount + "원", headerStyle);
+            ExcelUtil.createCellWithStyle(totalRow, 0, "", bodyStyle);
+            ExcelUtil.createCellWithStyle(totalRow, 1, "총계", bodyStyle);
+            ExcelUtil.createCellWithStyle(totalRow, 2, String.valueOf(grandTotalDinner), bodyStyle);
+            ExcelUtil.createCellWithStyle(totalRow, 3, String.valueOf(grandTotalSelf), bodyStyle);
 
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             workbook.write(outputStream);
