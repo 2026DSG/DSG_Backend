@@ -15,7 +15,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -37,45 +40,70 @@ public class ApplyMonthlyExcelService {
         }
 
         try (XSSFWorkbook workbook = new XSSFWorkbook()) {
-            XSSFSheet sheet = workbook.createSheet("월별 신청 현황");
+            XSSFSheet sheet = workbook.createSheet("월별 개인별 목록");
 
             CellStyle headerStyle = ExcelUtil.getHeaderStyle(workbook);
             CellStyle bodyStyle = ExcelUtil.getBodyStyle(workbook);
 
-            Row headerRow = sheet.createRow(0);
+            Row titleRow = sheet.createRow(0);
+            titleRow.createCell(0).setCellValue("월별 개인별 목록");
+
+            Row dateRow = sheet.createRow(2);
+            dateRow.createCell(0).setCellValue(year + "-" + month + "월");
+
+            Row headerRow = sheet.createRow(3);
             headerRow.setHeightInPoints(17.4f);
-            String[] headers = {"순번", "날짜", "급식 구분", "이름", "부서", "직위", "사유"};
+            String[] headers = {"부서", "이름", "일자", "초과근무", "개인부담"};
             for (int i = 0; i < headers.length; i++) {
                 Cell cell = headerRow.createCell(i);
                 cell.setCellValue(headers[i]);
                 cell.setCellStyle(headerStyle);
             }
 
-            sheet.setColumnWidth(0, (int) (8.3 * 256));
-            sheet.setColumnWidth(1, (int) (15.0 * 256));
-            sheet.setColumnWidth(2, (int) (14.0 * 256));
-            sheet.setColumnWidth(3, (int) (13.4 * 256));
-            sheet.setColumnWidth(4, (int) (13.8 * 256));
-            sheet.setColumnWidth(5, (int) (9.7 * 256));
-            sheet.setColumnWidth(6, (int) (30.0 * 256));
+            sheet.setColumnWidth(0, (int) (13.8 * 256));
+            sheet.setColumnWidth(1, (int) (13.4 * 256));
+            sheet.setColumnWidth(2, (int) (15.0 * 256));
+            sheet.setColumnWidth(3, (int) (12.0 * 256));
+            sheet.setColumnWidth(4, (int) (12.0 * 256));
 
-            int rowNum = 1;
+            Map<example.dsg_be.domain.teacher.domain.TeacherEntity, List<ApplyEntity>> groupedByTeacher = new LinkedHashMap<>();
             for (ApplyEntity apply : applyList) {
-                Row dataRow = sheet.createRow(rowNum);
-                dataRow.setHeightInPoints(17.4f);
+                groupedByTeacher.computeIfAbsent(apply.getTeacher(), k -> new ArrayList<>()).add(apply);
+            }
 
-                String date = apply.getCreatedAt().toLocalDate().toString();
-                String mealLabel = getMealLabel(apply.getMeal());
+            int rowNum = 4;
+            for (Map.Entry<example.dsg_be.domain.teacher.domain.TeacherEntity, List<ApplyEntity>> entry : groupedByTeacher.entrySet()) {
+                var teacher = entry.getKey();
+                var applies = entry.getValue();
+                int dinnerCount = 0;
+                int dinnerSelfCount = 0;
 
-                ExcelUtil.createCellWithStyle(dataRow, 0, String.valueOf(rowNum), bodyStyle);
-                ExcelUtil.createCellWithStyle(dataRow, 1, date, bodyStyle);
-                ExcelUtil.createCellWithStyle(dataRow, 2, mealLabel, bodyStyle);
-                ExcelUtil.createCellWithStyle(dataRow, 3, apply.getTeacher().getName(), bodyStyle);
-                ExcelUtil.createCellWithStyle(dataRow, 4, apply.getTeacher().getDepartment(), bodyStyle);
-                ExcelUtil.createCellWithStyle(dataRow, 5, apply.getTeacher().getPosition(), bodyStyle);
-                ExcelUtil.createCellWithStyle(dataRow, 6, apply.getReason(), bodyStyle);
+                for (int i = 0; i < applies.size(); i++) {
+                    ApplyEntity apply = applies.get(i);
+                    Row dataRow = sheet.createRow(rowNum++);
+                    dataRow.setHeightInPoints(17.4f);
 
-                rowNum++;
+                    ExcelUtil.createCellWithStyle(dataRow, 0, i == 0 ? teacher.getDepartment() : "", bodyStyle);
+                    ExcelUtil.createCellWithStyle(dataRow, 1, i == 0 ? teacher.getName() : "", bodyStyle);
+                    ExcelUtil.createCellWithStyle(dataRow, 2, apply.getCreatedAt().toLocalDate().toString(), bodyStyle);
+
+                    if (apply.getMeal() == MealType.DINNER) {
+                        ExcelUtil.createCellWithStyle(dataRow, 3, "O", bodyStyle);
+                        ExcelUtil.createCellWithStyle(dataRow, 4, "", bodyStyle);
+                        dinnerCount++;
+                    } else { // DINNER_SELF
+                        ExcelUtil.createCellWithStyle(dataRow, 3, "", bodyStyle);
+                        ExcelUtil.createCellWithStyle(dataRow, 4, "O", bodyStyle);
+                        dinnerSelfCount++;
+                    }
+                }
+
+                Row subtotalRow = sheet.createRow(rowNum++);
+                ExcelUtil.createCellWithStyle(subtotalRow, 0, "", bodyStyle);
+                ExcelUtil.createCellWithStyle(subtotalRow, 1, "월계", bodyStyle);
+                ExcelUtil.createCellWithStyle(subtotalRow, 2, "", bodyStyle);
+                ExcelUtil.createCellWithStyle(subtotalRow, 3, String.valueOf(dinnerCount), bodyStyle);
+                ExcelUtil.createCellWithStyle(subtotalRow, 4, String.valueOf(dinnerSelfCount), bodyStyle);
             }
 
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -83,14 +111,5 @@ public class ApplyMonthlyExcelService {
             return outputStream.toByteArray();
         }
     }
-
-    private String getMealLabel(MealType mealType) {
-        if (mealType == MealType.LUNCH) {
-            return "중식";
-        } else if (mealType == MealType.DINNER) {
-            return "초과근무";
-        } else {
-            return "개인부담";
-        }
-    }
+    // getMealLabel 사용되지 않아 삭제
 }

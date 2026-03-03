@@ -1,11 +1,9 @@
-server:
-  port: 8080
-
 spring:
   datasource:
-    url: ${DB_URL}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    url: jdbc:mysql://localhost:3306/DSG?serverTimezone=UTC&characterEncoding=UTF-8
+    username: root
+    password: crudkms
+
 
   jpa:
     hibernate:
