@@ -13,3 +13,15 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+
+jwt:
+  secretKey : ${JWT_SECRECT_KEY}
+  accessExp : ${ACCESS_EXP}
+  refreshExp : ${REFRESH_EXP}
+  header : ${HEADER}
+  prefix : ${PREFIX}
