@@ -20,7 +20,7 @@ spring:
       port: ${REDIS_PORT}
 
 jwt:
-  secretKey : ${JWT_SECRECT_KEY}
+  secretKey : ${JWT_SECRET_KEY}
   accessExp : ${ACCESS_EXP}
   refreshExp : ${REFRESH_EXP}
   header : ${HEADER}
