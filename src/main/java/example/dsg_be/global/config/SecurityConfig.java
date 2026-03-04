@@ -45,7 +45,7 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.POST, "/main/refresh").permitAll()
 
                                 //teacher
-                                .requestMatchers(HttpMethod.POST, "/amdin/teacher").hasAuthority("ADMIN")
+                                .requestMatchers(HttpMethod.POST, "/admin/teacher").hasAuthority("ADMIN")
                                 .requestMatchers(HttpMethod.GET, "/admin/teacher").permitAll()
                                 .requestMatchers(HttpMethod.DELETE, "/admin/teacher/{teacher-id}").hasAuthority("ADMIN")
                                 .requestMatchers(HttpMethod.POST, "/admin/teacher/excel").hasAuthority("ADMIN")
