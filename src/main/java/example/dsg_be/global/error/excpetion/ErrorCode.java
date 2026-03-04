@@ -17,7 +17,7 @@ public enum ErrorCode {
     User_Not_Found_Exception(404, "유저를 찾을 수 없습니다"),
     Password_Mis_Match_Exception(401, "비밀번호가 일치하지 않습니다"),
     Refresh_Token_Not_Found_Exception(404, "refreshToken을 찾을 수 없습니다"),
-    Refresh_Token_Mis_Match_Exception(403, "refreshToken 값이 저장된 값과 일치하지 않습니다");
+    Refresh_Token_Mis_Match_Exception(403, "refreshToken 값이 저장된 값과 일치하지 않습니다"),
 
     //apply
     Apply_Not_Found_Exception(404, "해당 신청 내역을 찾을 수 없습니다."),
