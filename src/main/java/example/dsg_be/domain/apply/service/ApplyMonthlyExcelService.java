@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -33,7 +34,7 @@ public class ApplyMonthlyExcelService {
     public byte[] execute(int year, int month) throws IOException {
         YearMonth yearMonth = YearMonth.of(year, month);
         LocalDateTime start = yearMonth.atDay(1).atStartOfDay();
-        LocalDateTime end = yearMonth.atEndOfMonth().atTime(23, 59, 59);
+        LocalDateTime end = yearMonth.atEndOfMonth().atTime(LocalTime.MAX);
 
         List<ApplyEntity> applyList = applyRepository
                 .findAllByCreatedAtBetweenOrderByCreatedAtAsc(start, end);
