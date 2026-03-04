@@ -19,7 +19,7 @@ import java.time.LocalTime;
 @RequiredArgsConstructor
 public class ApplyCreateService {
 
-    private static final LocalTime LUNCH_START = LocalTime.of(18, 40);
+    private static final LocalTime LUNCH_START = LocalTime.of(6, 40);
     private static final LocalTime DINNER_START = LocalTime.of(13, 30);
 
     private final ApplyRepository applyRepository;
@@ -61,12 +61,12 @@ public class ApplyCreateService {
 
         LocalTime now = LocalTime.now();
 
-        if (now.isAfter(DINNER_START)) {
-            return MealType.DINNER;
+        if (now.isAfter(LUNCH_START) && now.isBefore(DINNER_START)) {
+            return MealType.LUNCH;
         }
 
-        if (now.isAfter(LUNCH_START)) {
-            return MealType.LUNCH;
+        if (now.isAfter(DINNER_START)) {
+            return MealType.DINNER;
         }
 
         return MealType.LUNCH;
