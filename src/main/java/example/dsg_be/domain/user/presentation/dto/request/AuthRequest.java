@@ -14,6 +14,6 @@ public class AuthRequest {
     private String username;
 
     @NotBlank(message = "비밀번호는 필수입니다")
-    @Min(value = 8, message = "비밀번호는 최소 8자이상의 값을 요구합니다") // TODO : pattern, Size 등등 강화 정책 고려
+    @Size(min = 8, message = "비밀번호는 최소 8자이상의 값을 요구합니다") // TODO : pattern 강화 정책 고려
     private String password;
 }
