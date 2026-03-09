@@ -1,7 +1,6 @@
 package example.dsg_be.domain.apply.service;
 
 import example.dsg_be.domain.apply.domain.ApplyEntity;
-import example.dsg_be.domain.apply.domain.MealType;
 import example.dsg_be.domain.apply.exception.AlreadyAppliedException;
 import example.dsg_be.domain.apply.presentation.dto.request.ApplyCreateRequest;
 import example.dsg_be.domain.apply.presentation.dto.response.ApplyCreateResponse;
@@ -19,9 +18,6 @@ import java.time.LocalTime;
 @RequiredArgsConstructor
 public class ApplyCreateService {
 
-    private static final LocalTime LUNCH_START = LocalTime.of(6, 40);
-    private static final LocalTime DINNER_START = LocalTime.of(13, 30);
-
     private final ApplyRepository applyRepository;
     private final TeacherRepository teacherRepository;
 
@@ -30,12 +26,10 @@ public class ApplyCreateService {
         TeacherEntity teacher = teacherRepository.findById(request.getTeacherId())
                 .orElseThrow(() -> TeacherNotFoundException.EXCEPTION);
 
-        MealType meal = resolveMealType(request.getMeal());
-
         LocalDate today = LocalDate.now();
         boolean alreadyApplied = applyRepository.existsByTeacherAndMealAndCreatedAtBetween(
                 teacher,
-                meal,
+                request.getMeal(),
                 today.atStartOfDay(),
                 today.atTime(LocalTime.MAX)
         );
@@ -46,29 +40,11 @@ public class ApplyCreateService {
 
         ApplyEntity applyEntity = ApplyEntity.builder()
                 .teacher(teacher)
-                .meal(meal)
+                .meal(request.getMeal())
                 .reason(request.getReason())
                 .build();
 
         ApplyEntity saved = applyRepository.save(applyEntity);
         return new ApplyCreateResponse(saved);
-    }
-
-    private MealType resolveMealType(MealType requested) {
-        if (requested != null) {
-            return requested;
-        }
-
-        LocalTime now = LocalTime.now();
-
-        if (now.isAfter(LUNCH_START) && now.isBefore(DINNER_START)) {
-            return MealType.LUNCH;
-        }
-
-        if (now.isAfter(DINNER_START)) {
-            return MealType.DINNER;
-        }
-
-        return MealType.LUNCH;
     }
 }

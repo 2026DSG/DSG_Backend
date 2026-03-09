@@ -13,6 +13,7 @@ public class ApplyCreateRequest {
     @NotNull(message = "교직원 아이디는 필수입니다")
     private Long teacherId;
 
+    @NotNull(message = "급식 유형은 필수입니다")
     private MealType meal;
 
     @NotBlank(message = "신청 사유는 비어있을 수 없습니다")
