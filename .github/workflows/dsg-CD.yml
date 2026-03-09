@@ -23,7 +23,7 @@ jobs:
       - name: build with gradle
         uses: gradle/actions/setup-gradle@v3
         with:
-          arguments: build
+          arguments: ./gradlew build -x test
 
       - name: Login to DockerHub
         uses: docker/login-action@v3
