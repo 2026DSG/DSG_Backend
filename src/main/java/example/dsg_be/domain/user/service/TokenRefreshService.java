@@ -3,7 +3,6 @@ package example.dsg_be.domain.user.service;
 import example.dsg_be.domain.user.domain.RefreshToken;
 import example.dsg_be.domain.user.domain.Role;
 import example.dsg_be.domain.user.domain.User;
-import example.dsg_be.domain.user.exception.PasswordMisMatchException;
 import example.dsg_be.domain.user.exception.RefreshTokenMisMatchException;
 import example.dsg_be.domain.user.exception.RefreshTokenNotFoundException;
 import example.dsg_be.domain.user.exception.UserNotFoundException;

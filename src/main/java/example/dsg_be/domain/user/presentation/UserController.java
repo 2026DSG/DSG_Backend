@@ -4,7 +4,6 @@ import example.dsg_be.domain.user.presentation.dto.request.AuthRequest;
 import example.dsg_be.domain.user.presentation.dto.request.RefreshTokenRequest;
 import example.dsg_be.domain.user.presentation.dto.resposnse.TokenResponse;
 import example.dsg_be.domain.user.service.LoginService;
-import example.dsg_be.domain.user.service.SignupService;
 import example.dsg_be.domain.user.service.TokenRefreshService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     private final LoginService loginService;
     private final TokenRefreshService tokenRefreshService;
-    private final SignupService signupService;
 
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
@@ -29,11 +27,5 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     public TokenResponse refresh(@Valid @RequestBody RefreshTokenRequest refreshTokenRequest) {
         return tokenRefreshService.execute(refreshTokenRequest);
-    }
-
-    @PostMapping("/signup")
-    @ResponseStatus(HttpStatus.CREATED)
-    public void signup(@Valid @RequestBody AuthRequest authRequest) {
-        signupService.execute(authRequest);
     }
 }

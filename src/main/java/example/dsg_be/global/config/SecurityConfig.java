@@ -21,11 +21,6 @@ public class SecurityConfig {
     private final JwtTokenProvider jwtTokenProvider;
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf ->
@@ -40,17 +35,16 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth ->
                         auth
                                 // user
-                                .requestMatchers(HttpMethod.POST, "/main/signup").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/main/login").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/main/refresh").permitAll()
 
                                 //teacher
-                                .requestMatchers(HttpMethod.POST, "/admin/teacher").hasAuthority("ADMIN")
+                                .requestMatchers(HttpMethod.POST, "/admin/teacher").hasAuthority("OFFICE")
                                 .requestMatchers(HttpMethod.GET, "/admin/teacher").permitAll()
-                                .requestMatchers(HttpMethod.DELETE, "/admin/teacher/{teacher-id}").hasAuthority("ADMIN")
-                                .requestMatchers(HttpMethod.POST, "/admin/teacher/excel").hasAuthority("ADMIN")
-                                .requestMatchers(HttpMethod.PUT, "/admin/teacher/excel").hasAuthority("ADMIN")
-                                .requestMatchers(HttpMethod.GET, "/admin/teacher/excel").hasAuthority("ADMIN")
+                                .requestMatchers(HttpMethod.DELETE, "/admin/teacher/{teacher-id}").hasAuthority("OFFICE")
+                                .requestMatchers(HttpMethod.POST, "/admin/teacher/excel").hasAuthority("OFFICE")
+                                .requestMatchers(HttpMethod.PUT, "/admin/teacher/excel").hasAuthority("OFFICE")
+                                .requestMatchers(HttpMethod.GET, "/admin/teacher/excel").hasAuthority("OFFICE")
                                 .anyRequest().authenticated()
                 )
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
