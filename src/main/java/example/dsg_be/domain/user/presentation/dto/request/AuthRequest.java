@@ -1,6 +1,5 @@
 package example.dsg_be.domain.user.presentation.dto.request;
 
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
