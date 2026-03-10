@@ -2,7 +2,6 @@ package example.dsg_be.domain.user.domain;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -25,11 +24,4 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
     private Role role;
-
-    @Builder
-    public User(String username, String password) {
-        this.username = username;
-        this.password = password;
-        this.role = Role.USER;
-    }
 }
