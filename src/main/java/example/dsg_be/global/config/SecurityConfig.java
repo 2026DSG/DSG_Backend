@@ -43,6 +43,13 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.POST, "/admin/teacher/excel").hasAuthority("OFFICE")
                                 .requestMatchers(HttpMethod.PUT, "/admin/teacher/excel").hasAuthority("OFFICE")
                                 .requestMatchers(HttpMethod.GET, "/admin/teacher/excel").hasAuthority("OFFICE")
+
+                                // apply
+                                .requestMatchers(HttpMethod.POST, "/apply").authenticated()
+                                .requestMatchers(HttpMethod.GET, "/apply").authenticated()
+                                .requestMatchers(HttpMethod.DELETE, "/apply/{apply-id}").authenticated()
+                                .requestMatchers(HttpMethod.GET, "/apply/excel/monthly").hasAuthority("OFFICE")
+                                .requestMatchers(HttpMethod.GET, "/apply/excel/summary").hasAuthority("OFFICE")
                                 .anyRequest().authenticated()
                 )
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),

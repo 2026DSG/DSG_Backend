@@ -19,6 +19,7 @@ public enum ErrorCode {
     Refresh_Token_Mis_Match_Exception(403, "refreshToken 값이 저장된 값과 일치하지 않습니다"),
 
     //apply
+    Invalid_Meal_Type_Exception(400, "유효하지 않은 급식 유형입니다."),
     Apply_Not_Found_Exception(404, "해당 신청 내역을 찾을 수 없습니다."),
     Already_Applied_Exception(409, "이미 해당 날짜에 동일한 급식 신청이 존재합니다.");
 
