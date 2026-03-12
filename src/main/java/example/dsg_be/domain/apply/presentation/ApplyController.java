@@ -14,13 +14,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @RestController
-@RequestMapping("/apply")
 @RequiredArgsConstructor
 public class ApplyController {
 
@@ -30,31 +30,30 @@ public class ApplyController {
     private final ApplyMonthlyExcelService applyMonthlyExcelService;
     private final ApplySummaryExcelService applySummaryExcelService;
 
-    @PostMapping
+    @PostMapping("/main/apply")
     @ResponseStatus(HttpStatus.CREATED)
     public ApplyCreateResponse create(@Valid @RequestBody ApplyCreateRequest request) {
         return applyCreateService.execute(request);
     }
 
-    @GetMapping
+    @GetMapping("/main/apply")
     @ResponseStatus(HttpStatus.OK)
     public List<ApplyListResponse> getList(@RequestParam MealType meal) {
         return applyListReadService.execute(meal);
     }
 
-    @DeleteMapping("/{apply-id}")
+    @DeleteMapping("/main/apply/{apply-id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("apply-id") Long applyId) {
         applyDeleteService.execute(applyId);
     }
 
-    @GetMapping("/excel/monthly")
+    @GetMapping("/admin/apply/excel/monthly")
     public ResponseEntity<Resource> downloadMonthlyExcel(
             @RequestParam int year,
             @RequestParam int month) throws IOException {
         byte[] content = applyMonthlyExcelService.execute(year, month);
         ByteArrayResource resource = new ByteArrayResource(content);
-
         String fileName = URLEncoder.encode("월별_신청_현황.xlsx", StandardCharsets.UTF_8);
 
         return ResponseEntity.ok()
@@ -65,13 +64,12 @@ public class ApplyController {
                 .body(resource);
     }
 
-    @GetMapping("/excel/summary")
+    @GetMapping("/admin/apply/excel/summary")
     public ResponseEntity<Resource> downloadSummaryExcel(
             @RequestParam int year,
             @RequestParam int month) throws IOException {
         byte[] content = applySummaryExcelService.execute(year, month);
         ByteArrayResource resource = new ByteArrayResource(content);
-
         String fileName = URLEncoder.encode("급식_신청_총괄표.xlsx", StandardCharsets.UTF_8);
 
         return ResponseEntity.ok()
