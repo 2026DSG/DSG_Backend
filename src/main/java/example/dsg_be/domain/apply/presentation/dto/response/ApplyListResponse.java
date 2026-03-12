@@ -8,19 +8,21 @@ import java.time.LocalDateTime;
 @Getter
 public class ApplyListResponse {
 
-    private Long applyId;
-    private Long teacherId;
-    private String teacherName;
-    private String department;
-    private MealType meal;
-    private String reason;
-    private LocalDateTime createdAt;
+    private final Long applyId;
+    private final Long teacherId;
+    private final String teacherName;
+    private final String department;
+    private final String position;
+    private final MealType meal;
+    private final String reason;
+    private final LocalDateTime createdAt;
 
     public ApplyListResponse(ApplyEntity applyEntity) {
         this.applyId = applyEntity.getApplyId();
         this.teacherId = applyEntity.getTeacher().getTeacherId();
         this.teacherName = applyEntity.getTeacher().getName();
         this.department = applyEntity.getTeacher().getDepartment();
+        this.position = applyEntity.getTeacher().getPosition();
         this.meal = applyEntity.getMeal();
         this.reason = applyEntity.getReason();
         this.createdAt = applyEntity.getCreatedAt();
