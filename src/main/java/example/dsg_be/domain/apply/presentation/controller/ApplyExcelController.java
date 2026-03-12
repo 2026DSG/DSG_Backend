@@ -1,54 +1,29 @@
-package example.dsg_be.domain.apply.presentation;
+package example.dsg_be.domain.apply.presentation.controller;
 
-import example.dsg_be.domain.apply.domain.MealType;
-import example.dsg_be.domain.apply.presentation.dto.request.ApplyCreateRequest;
-import example.dsg_be.domain.apply.presentation.dto.response.ApplyCreateResponse;
-import example.dsg_be.domain.apply.presentation.dto.response.ApplyListResponse;
-import example.dsg_be.domain.apply.service.*;
-import jakarta.validation.Valid;
+import example.dsg_be.domain.apply.service.ApplyMonthlyExcelService;
+import example.dsg_be.domain.apply.service.ApplySummaryExcelService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 
 @RestController
+@RequestMapping("/admin")
 @RequiredArgsConstructor
-public class ApplyController {
-
-    private final ApplyCreateService applyCreateService;
-    private final ApplyListReadService applyListReadService;
-    private final ApplyDeleteService applyDeleteService;
+public class ApplyExcelController {
     private final ApplyMonthlyExcelService applyMonthlyExcelService;
     private final ApplySummaryExcelService applySummaryExcelService;
 
-    @PostMapping("/main/apply")
-    @ResponseStatus(HttpStatus.CREATED)
-    public ApplyCreateResponse create(@Valid @RequestBody ApplyCreateRequest request) {
-        return applyCreateService.execute(request);
-    }
-
-    @GetMapping("/main/apply")
-    @ResponseStatus(HttpStatus.OK)
-    public List<ApplyListResponse> getList(@RequestParam MealType meal) {
-        return applyListReadService.execute(meal);
-    }
-
-    @DeleteMapping("/main/apply/{apply-id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable("apply-id") Long applyId) {
-        applyDeleteService.execute(applyId);
-    }
-
-    @GetMapping("/admin/apply/excel/monthly")
+    @GetMapping("/apply/excel/monthly")
     public ResponseEntity<Resource> downloadMonthlyExcel(
             @RequestParam int year,
             @RequestParam int month) throws IOException {
@@ -64,7 +39,7 @@ public class ApplyController {
                 .body(resource);
     }
 
-    @GetMapping("/admin/apply/excel/summary")
+    @GetMapping("/apply/excel/summary")
     public ResponseEntity<Resource> downloadSummaryExcel(
             @RequestParam int year,
             @RequestParam int month) throws IOException {

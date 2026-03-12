@@ -45,11 +45,11 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.GET, "/admin/teacher/excel").hasAuthority("OFFICE")
 
                                 // apply
-                                .requestMatchers(HttpMethod.POST, "/apply").authenticated()
-                                .requestMatchers(HttpMethod.GET, "/apply").authenticated()
-                                .requestMatchers(HttpMethod.DELETE, "/apply/{apply-id}").authenticated()
-                                .requestMatchers(HttpMethod.GET, "/apply/excel/monthly").hasAuthority("OFFICE")
-                                .requestMatchers(HttpMethod.GET, "/apply/excel/summary").hasAuthority("OFFICE")
+                                .requestMatchers(HttpMethod.POST, "/main/apply").authenticated()
+                                .requestMatchers(HttpMethod.GET, "/main/apply").authenticated()
+                                .requestMatchers(HttpMethod.DELETE, "/main/apply/{apply-id}").authenticated()
+                                .requestMatchers(HttpMethod.GET, "/admin/apply/excel/monthly").hasAuthority("OFFICE")
+                                .requestMatchers(HttpMethod.GET, "/admin/apply/excel/summary").hasAuthority("OFFICE")
                                 .anyRequest().authenticated()
                 )
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
