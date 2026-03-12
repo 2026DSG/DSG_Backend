@@ -3,7 +3,6 @@ package example.dsg_be.domain.apply.service;
 import example.dsg_be.domain.apply.domain.ApplyEntity;
 import example.dsg_be.domain.apply.exception.AlreadyAppliedException;
 import example.dsg_be.domain.apply.presentation.dto.request.ApplyCreateRequest;
-import example.dsg_be.domain.apply.presentation.dto.response.ApplyCreateResponse;
 import example.dsg_be.domain.apply.repository.ApplyRepository;
 import example.dsg_be.domain.teacher.domain.TeacherEntity;
 import example.dsg_be.domain.teacher.exception.TeacherNotFoundException;
@@ -22,7 +21,7 @@ public class ApplyCreateService {
     private final TeacherRepository teacherRepository;
 
     @Transactional
-    public ApplyCreateResponse execute(ApplyCreateRequest request) {
+    public void execute(ApplyCreateRequest request) {
         TeacherEntity teacher = teacherRepository.findById(request.getTeacherId())
                 .orElseThrow(() -> TeacherNotFoundException.EXCEPTION);
 
@@ -44,7 +43,6 @@ public class ApplyCreateService {
                 .reason(request.getReason())
                 .build();
 
-        ApplyEntity saved = applyRepository.save(applyEntity);
-        return new ApplyCreateResponse(saved);
+        applyRepository.save(applyEntity);
     }
 }
