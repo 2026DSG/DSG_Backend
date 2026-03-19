@@ -6,12 +6,12 @@ import java.time.LocalDateTime;
 
 @Getter
 public class TeacherResponse {
-    private Long id;
-    private Long number;
-    private String department;
-    private String position;
-    private LocalDateTime createdAt;
-    private String name;
+    private final Long id;
+    private final Long number;
+    private final String department;
+    private final String position;
+    private final LocalDateTime createdAt;
+    private final String name;
 
     public TeacherResponse(TeacherEntity teacherEntity) {
         this.id = teacherEntity.getTeacherId();
