@@ -30,7 +30,7 @@ public class TeacherEntity {
     private String name;
 
     @CreatedDate
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @Column(name = "is_removed", nullable = false)
@@ -42,7 +42,6 @@ public class TeacherEntity {
         this.department = department;
         this.position = position;
         this.name = name;
-        this.createdAt = LocalDateTime.now();
         this.isRemoved = false;
     }
 
