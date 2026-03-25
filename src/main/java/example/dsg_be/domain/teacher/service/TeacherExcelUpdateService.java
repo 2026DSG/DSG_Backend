@@ -33,7 +33,7 @@ public class TeacherExcelUpdateService {
             List<TeacherEntity> teachersData = new ArrayList<>(); // 데이터들 담을 List
 
             Long num = 1L;
-            for (int i = 1; i < dataList.size(); i++) {
+            for (int i = 0; i < dataList.size(); i++) {
                 ExcelReadData data = dataList.get(i);
                 String name = data.getName();
                 String department = data.getDepartment();

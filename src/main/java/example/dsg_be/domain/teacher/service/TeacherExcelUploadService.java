@@ -26,7 +26,7 @@ public class TeacherExcelUploadService {
         List<TeacherEntity> teachers = new ArrayList<>(); // 데이터들을 담을 List
 
         Long number = 1L;
-        for (int i = 1; i < dataList.size(); i++) {
+        for (int i = 0; i < dataList.size(); i++) {
             ExcelReadData data = dataList.get(i);
             String name = data.getName();
             String department = data.getDepartment();
