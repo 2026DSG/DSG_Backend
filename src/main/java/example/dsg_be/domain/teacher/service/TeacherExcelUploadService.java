@@ -5,12 +5,14 @@ import example.dsg_be.domain.teacher.presentation.dto.ExcelReadData;
 import example.dsg_be.domain.teacher.repository.TeacherRepository;
 import example.dsg_be.global.util.ExcelDataUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class TeacherExcelUploadService {
@@ -19,6 +21,11 @@ public class TeacherExcelUploadService {
     @Transactional
     public void execute(MultipartFile file) {
         List<ExcelReadData> dataList = ExcelDataUtil.readExcel(file);
+        log.info("읽은 데이터 수: {}", dataList.size());
+        for (ExcelReadData data : dataList) {
+            log.info("읽은 데이터 - name: {}, department: {}, position: {}",
+                    data.getName(), data.getDepartment(), data.getPosition());
+        }
         saveTeacher(dataList);
     }
 
