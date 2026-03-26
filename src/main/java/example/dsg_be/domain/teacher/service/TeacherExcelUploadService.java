@@ -16,12 +16,12 @@ import java.util.List;
 public class TeacherExcelUploadService {
     private final TeacherRepository teacherRepository;
 
+    @Transactional
     public void execute(MultipartFile file) {
         List<ExcelReadData> dataList = ExcelDataUtil.readExcel(file);
         saveTeacher(dataList);
     }
 
-    @Transactional
     public void saveTeacher(List<ExcelReadData> dataList) {
         List<TeacherEntity> teachers = new ArrayList<>(); // 데이터들을 담을 List
 

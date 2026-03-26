@@ -18,12 +18,12 @@ import java.util.stream.Collectors;
 public class TeacherExcelUpdateService {
     private final TeacherRepository teacherRepository;
 
+    @Transactional
     public void execute(MultipartFile file) {
         List<ExcelReadData> dataList = ExcelDataUtil.readExcel(file);
         updateTeacher(dataList);
     }
 
-    @Transactional
     public void updateTeacher(List<ExcelReadData> dataList) {
         List<TeacherEntity> allTeachers = teacherRepository.findAll();
             Map<String, TeacherEntity> teacherMap = allTeachers.stream()
