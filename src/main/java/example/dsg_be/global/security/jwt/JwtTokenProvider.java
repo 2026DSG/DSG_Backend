@@ -2,7 +2,7 @@ package example.dsg_be.global.security.jwt;
 
 import example.dsg_be.domain.user.domain.RefreshToken;
 import example.dsg_be.domain.user.domain.Role;
-import example.dsg_be.domain.user.presentation.dto.resposnse.TokenResponse;
+import example.dsg_be.domain.user.presentation.dto.resposnse.TokenWithRoleResponse;
 import example.dsg_be.domain.user.repository.RefreshTokenRepository;
 import example.dsg_be.global.error.excpetion.CustomJwtException;
 import example.dsg_be.global.security.auth.CustomUserDetailsService;
@@ -23,13 +23,14 @@ public class JwtTokenProvider {
     private final CustomUserDetailsService customUserDetailsService;
     private final RefreshTokenRepository refreshTokenRepository;
 
-    public TokenResponse generateBothToken(String username, Role role) {
+    public TokenWithRoleResponse generateBothToken(String username, Role role) {
         String accessToken = generateAccessToken(username, role);
         String refreshToken = generateRefreshToken(username, role);
 
-        return TokenResponse.builder()
+        return TokenWithRoleResponse.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
+                .role(role)
                 .build();
     }
 
