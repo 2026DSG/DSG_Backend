@@ -2,7 +2,7 @@ package example.dsg_be.domain.user.presentation;
 
 import example.dsg_be.domain.user.presentation.dto.request.AuthRequest;
 import example.dsg_be.domain.user.presentation.dto.request.RefreshTokenRequest;
-import example.dsg_be.domain.user.presentation.dto.resposnse.TokenResponse;
+import example.dsg_be.domain.user.presentation.dto.resposnse.TokenWithRoleResponse;
 import example.dsg_be.domain.user.service.LoginService;
 import example.dsg_be.domain.user.service.TokenRefreshService;
 import jakarta.validation.Valid;
@@ -19,13 +19,13 @@ public class UserController {
 
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
-    public TokenResponse login(@Valid @RequestBody AuthRequest authRequest) {
+    public TokenWithRoleResponse login(@Valid @RequestBody AuthRequest authRequest) {
         return loginService.execute(authRequest);
     }
 
     @PostMapping("/refresh")
     @ResponseStatus(HttpStatus.OK)
-    public TokenResponse refresh(@Valid @RequestBody RefreshTokenRequest refreshTokenRequest) {
+    public TokenWithRoleResponse refresh(@Valid @RequestBody RefreshTokenRequest refreshTokenRequest) {
         return tokenRefreshService.execute(refreshTokenRequest);
     }
 }
