@@ -7,7 +7,7 @@ import example.dsg_be.domain.user.exception.RefreshTokenMisMatchException;
 import example.dsg_be.domain.user.exception.RefreshTokenNotFoundException;
 import example.dsg_be.domain.user.exception.UserNotFoundException;
 import example.dsg_be.domain.user.presentation.dto.request.RefreshTokenRequest;
-import example.dsg_be.domain.user.presentation.dto.resposnse.TokenResponse;
+import example.dsg_be.domain.user.presentation.dto.resposnse.TokenWithRoleResponse;
 import example.dsg_be.domain.user.repository.RefreshTokenRepository;
 import example.dsg_be.domain.user.repository.UserRepository;
 import example.dsg_be.global.security.jwt.JwtTokenProvider;
@@ -23,7 +23,7 @@ public class TokenRefreshService {
     private final UserRepository userRepository;
 
     @Transactional
-    public TokenResponse execute(RefreshTokenRequest request) {
+    public TokenWithRoleResponse execute(RefreshTokenRequest request) {
         jwtTokenProvider.validateToken(request.getRefreshToken());
 
         String username = jwtTokenProvider.getAuthentication(request.getRefreshToken()).getName();
@@ -41,9 +41,10 @@ public class TokenRefreshService {
         String accessToken = jwtTokenProvider.generateAccessToken(username, role);
         String refreshToken = jwtTokenProvider.generateRefreshToken(username, role);
 
-        return TokenResponse.builder()
+        return TokenWithRoleResponse.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
+                .role(role)
                 .build();
     }
 }

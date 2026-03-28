@@ -3,7 +3,7 @@ package example.dsg_be.domain.user.service;
 import example.dsg_be.domain.user.domain.User;
 import example.dsg_be.domain.user.exception.UserNotFoundException;
 import example.dsg_be.domain.user.presentation.dto.request.AuthRequest;
-import example.dsg_be.domain.user.presentation.dto.resposnse.TokenResponse;
+import example.dsg_be.domain.user.presentation.dto.resposnse.TokenWithRoleResponse;
 import example.dsg_be.domain.user.repository.UserRepository;
 import example.dsg_be.global.security.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ public class LoginService {
     private final UserRepository userRepository;
 
     @Transactional
-    public TokenResponse execute(AuthRequest authRequest) {
+    public TokenWithRoleResponse execute(AuthRequest authRequest) {
         User user = userRepository.findByUsername(authRequest.getUsername())
                 .orElseThrow(() -> UserNotFoundException.EXCEPTION);
 
