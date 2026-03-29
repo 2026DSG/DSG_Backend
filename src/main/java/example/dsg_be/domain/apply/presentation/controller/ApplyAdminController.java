@@ -1,5 +1,7 @@
 package example.dsg_be.domain.apply.presentation.controller;
 
+import example.dsg_be.domain.apply.presentation.dto.response.ApplyListResponse;
+import example.dsg_be.domain.apply.service.ApplyAdminReadService;
 import example.dsg_be.domain.apply.service.ApplyMonthlyExcelService;
 import example.dsg_be.domain.apply.service.ApplySummaryExcelService;
 import lombok.RequiredArgsConstructor;
@@ -15,13 +17,20 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 @RestController
 @RequestMapping("/admin")
 @RequiredArgsConstructor
-public class ApplyExcelController {
+public class ApplyAdminController {
     private final ApplyMonthlyExcelService applyMonthlyExcelService;
     private final ApplySummaryExcelService applySummaryExcelService;
+    private final ApplyAdminReadService applyAdminReadService;
+
+    @GetMapping("/apply")
+    public List<ApplyListResponse> getApplyListOnAdmin() {
+        return applyAdminReadService.execute();
+    }
 
     @GetMapping("/apply/excel/monthly")
     public ResponseEntity<Resource> downloadMonthlyExcel(

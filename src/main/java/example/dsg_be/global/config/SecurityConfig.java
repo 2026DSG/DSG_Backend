@@ -73,6 +73,7 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.POST, "/main/apply").authenticated()
                                 .requestMatchers(HttpMethod.GET, "/main/apply").authenticated()
                                 .requestMatchers(HttpMethod.DELETE, "/main/apply/{apply-id}").authenticated()
+                                .requestMatchers(HttpMethod.GET, "/admin/apply").hasAuthority("OFFICE")
                                 .requestMatchers(HttpMethod.GET, "/admin/apply/excel/monthly").hasAuthority("OFFICE")
                                 .requestMatchers(HttpMethod.GET, "/admin/apply/excel/summary").hasAuthority("OFFICE")
                                 .anyRequest().authenticated()

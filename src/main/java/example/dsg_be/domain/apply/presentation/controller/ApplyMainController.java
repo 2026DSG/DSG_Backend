@@ -13,7 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/main")
 @RequiredArgsConstructor
-public class ApplyController {
+public class ApplyMainController {
 
     private final ApplyCreateService applyCreateService;
     private final ApplyListReadService applyListReadService;
