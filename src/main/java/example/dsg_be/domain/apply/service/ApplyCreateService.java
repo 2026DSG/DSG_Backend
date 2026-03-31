@@ -16,7 +16,6 @@ import java.time.LocalTime;
 @Service
 @RequiredArgsConstructor
 public class ApplyCreateService {
-
     private final ApplyRepository applyRepository;
     private final TeacherRepository teacherRepository;
 
