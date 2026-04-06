@@ -62,6 +62,10 @@ public class ApplySummaryExcelService {
             CellStyle headerStyle = ExcelUtil.getHeaderStyle(workbook);
             CellStyle bodyStyle = ExcelUtil.getBodyStyle(workbook);
 
+            CellStyle numberStyle = ExcelUtil.getBodyStyle(workbook);
+            DataFormat dataFormat = workbook.createDataFormat();
+            numberStyle.setDataFormat(dataFormat.getFormat("#,##0"));
+
             Row titleRow = sheet.createRow(0);
             titleRow.createCell(0).setCellValue("총괄표");
 
@@ -107,7 +111,14 @@ public class ApplySummaryExcelService {
                 ExcelUtil.createCellWithStyle(dataRow, 2, teacher.getName(), bodyStyle);
                 ExcelUtil.createCellWithStyle(dataRow, 3, String.valueOf(dinnerCount), bodyStyle);
                 ExcelUtil.createCellWithStyle(dataRow, 4, String.valueOf(selfCount), bodyStyle);
-                ExcelUtil.createCellWithStyle(dataRow, 5, amount > 0 ? amount + "원" : "-", bodyStyle);
+
+                    if (amount > 0) {
+                    Cell amountCell = dataRow.createCell(5);
+                    amountCell.setCellValue(amount);
+                    amountCell.setCellStyle(numberStyle);
+                } else {
+                    ExcelUtil.createCellWithStyle(dataRow, 5, "-", bodyStyle);
+                }
             }
 
             Row totalRow = sheet.createRow(rowNum);
@@ -117,7 +128,10 @@ public class ApplySummaryExcelService {
             ExcelUtil.createCellWithStyle(totalRow, 2, "총계", bodyStyle);
             ExcelUtil.createCellWithStyle(totalRow, 3, String.valueOf(grandTotalDinner), bodyStyle);
             ExcelUtil.createCellWithStyle(totalRow, 4, String.valueOf(grandTotalSelf), bodyStyle);
-            ExcelUtil.createCellWithStyle(totalRow, 5, grandTotalAmount + "원", bodyStyle);
+
+            Cell totalAmountCell = totalRow.createCell(5);
+            totalAmountCell.setCellValue(grandTotalAmount);
+            totalAmountCell.setCellStyle(numberStyle);
 
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             workbook.write(outputStream);

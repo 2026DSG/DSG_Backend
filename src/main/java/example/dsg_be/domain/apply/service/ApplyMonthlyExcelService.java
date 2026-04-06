@@ -49,6 +49,10 @@ public class ApplyMonthlyExcelService {
             CellStyle headerStyle = ExcelUtil.getHeaderStyle(workbook);
             CellStyle bodyStyle = ExcelUtil.getBodyStyle(workbook);
 
+            CellStyle numberStyle = ExcelUtil.getBodyStyle(workbook);
+            DataFormat dataFormat = workbook.createDataFormat();
+            numberStyle.setDataFormat(dataFormat.getFormat("#,##0"));
+
             Row titleRow = sheet.createRow(0);
             titleRow.createCell(0).setCellValue("월별 개인별 목록");
 
@@ -117,8 +121,13 @@ public class ApplyMonthlyExcelService {
                         ExcelUtil.createCellWithStyle(dataRow, 5, "", bodyStyle);
                     }
 
-                    ExcelUtil.createCellWithStyle(dataRow, 6,
-                            rowAmount > 0 ? rowAmount + "원" : "", bodyStyle);
+                    if (rowAmount > 0) {
+                        Cell amountCell = dataRow.createCell(6);
+                        amountCell.setCellValue(rowAmount);
+                        amountCell.setCellStyle(numberStyle);
+                    } else {
+                        ExcelUtil.createCellWithStyle(dataRow, 6, "", bodyStyle);
+                    }
                 }
 
                 Row subtotalRow = sheet.createRow(rowNum++);
@@ -128,7 +137,10 @@ public class ApplyMonthlyExcelService {
                 ExcelUtil.createCellWithStyle(subtotalRow, 3, "", bodyStyle);
                 ExcelUtil.createCellWithStyle(subtotalRow, 4, String.valueOf(dinnerCount), bodyStyle);
                 ExcelUtil.createCellWithStyle(subtotalRow, 5, String.valueOf(selfCount), bodyStyle);
-                ExcelUtil.createCellWithStyle(subtotalRow, 6, totalAmount + "원", bodyStyle);
+
+                Cell subtotalAmountCell = subtotalRow.createCell(6);
+                subtotalAmountCell.setCellValue(totalAmount);
+                subtotalAmountCell.setCellStyle(numberStyle);
             }
 
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
