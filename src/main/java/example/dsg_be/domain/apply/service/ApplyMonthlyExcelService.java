@@ -49,9 +49,13 @@ public class ApplyMonthlyExcelService {
             CellStyle headerStyle = ExcelUtil.getHeaderStyle(workbook);
             CellStyle bodyStyle = ExcelUtil.getBodyStyle(workbook);
 
-            CellStyle numberStyle = ExcelUtil.getBodyStyle(workbook);
             DataFormat dataFormat = workbook.createDataFormat();
+
+            CellStyle numberStyle = ExcelUtil.getBodyStyle(workbook);
             numberStyle.setDataFormat(dataFormat.getFormat("#,##0"));
+
+            CellStyle blankZeroNumberStyle = ExcelUtil.getBodyStyle(workbook);
+            blankZeroNumberStyle.setDataFormat(dataFormat.getFormat("#,##0;-#,##0;;@"));
 
             Row titleRow = sheet.createRow(0);
             titleRow.createCell(0).setCellValue("월별 개인별 목록");
@@ -121,13 +125,9 @@ public class ApplyMonthlyExcelService {
                         ExcelUtil.createCellWithStyle(dataRow, 5, "", bodyStyle);
                     }
 
-                    if (rowAmount > 0) {
-                        Cell amountCell = dataRow.createCell(6);
-                        amountCell.setCellValue(rowAmount);
-                        amountCell.setCellStyle(numberStyle);
-                    } else {
-                        ExcelUtil.createCellWithStyle(dataRow, 6, "", bodyStyle);
-                    }
+                    Cell amountCell = dataRow.createCell(6);
+                    amountCell.setCellValue(rowAmount);
+                    amountCell.setCellStyle(rowAmount > 0 ? numberStyle : blankZeroNumberStyle);
                 }
 
                 Row subtotalRow = sheet.createRow(rowNum++);

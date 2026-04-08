@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -38,8 +40,10 @@ public class ApplyController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<ApplyListResponse> getList(@RequestParam MealType meal) {
-        return applyListReadService.execute(meal);
+    public List<ApplyListResponse> getList(
+            @RequestParam MealType meal,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate applyDate) {
+        return applyListReadService.execute(meal, applyDate);
     }
 
     @DeleteMapping("/{apply-id}")
@@ -54,7 +58,6 @@ public class ApplyController {
             @RequestParam int month) throws IOException {
         byte[] content = applyMonthlyExcelService.execute(year, month);
         ByteArrayResource resource = new ByteArrayResource(content);
-
         String fileName = URLEncoder.encode("월별_신청_현황.xlsx", StandardCharsets.UTF_8);
 
         return ResponseEntity.ok()
@@ -71,7 +74,6 @@ public class ApplyController {
             @RequestParam int month) throws IOException {
         byte[] content = applySummaryExcelService.execute(year, month);
         ByteArrayResource resource = new ByteArrayResource(content);
-
         String fileName = URLEncoder.encode("급식_신청_총괄표.xlsx", StandardCharsets.UTF_8);
 
         return ResponseEntity.ok()

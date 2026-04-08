@@ -3,6 +3,7 @@ package example.dsg_be.domain.apply.domain;
 import example.dsg_be.domain.teacher.domain.TeacherEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -27,14 +28,18 @@ public class ApplyEntity {
     @Column(name = "reason", nullable = false)
     private String reason;
 
+    @Column(name = "apply_date", nullable = false)
+    private LocalDate applyDate;
+
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
     @Builder
-    public ApplyEntity(TeacherEntity teacher, MealType meal, String reason) {
+    public ApplyEntity(TeacherEntity teacher, MealType meal, String reason, LocalDate applyDate) {
         this.teacher = teacher;
         this.meal = meal;
         this.reason = reason;
+        this.applyDate = applyDate;
         this.createdAt = LocalDateTime.now();
     }
 }

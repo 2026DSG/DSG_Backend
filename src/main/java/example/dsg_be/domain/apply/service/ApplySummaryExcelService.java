@@ -62,9 +62,13 @@ public class ApplySummaryExcelService {
             CellStyle headerStyle = ExcelUtil.getHeaderStyle(workbook);
             CellStyle bodyStyle = ExcelUtil.getBodyStyle(workbook);
 
-            CellStyle numberStyle = ExcelUtil.getBodyStyle(workbook);
             DataFormat dataFormat = workbook.createDataFormat();
+
+            CellStyle numberStyle = ExcelUtil.getBodyStyle(workbook);
             numberStyle.setDataFormat(dataFormat.getFormat("#,##0"));
+
+            CellStyle zeroDashNumberStyle = ExcelUtil.getBodyStyle(workbook);
+            zeroDashNumberStyle.setDataFormat(dataFormat.getFormat("#,##0;-#,##0;\"-\""));
 
             Row titleRow = sheet.createRow(0);
             titleRow.createCell(0).setCellValue("총괄표");
@@ -112,13 +116,9 @@ public class ApplySummaryExcelService {
                 ExcelUtil.createCellWithStyle(dataRow, 3, String.valueOf(dinnerCount), bodyStyle);
                 ExcelUtil.createCellWithStyle(dataRow, 4, String.valueOf(selfCount), bodyStyle);
 
-                    if (amount > 0) {
-                    Cell amountCell = dataRow.createCell(5);
-                    amountCell.setCellValue(amount);
-                    amountCell.setCellStyle(numberStyle);
-                } else {
-                    ExcelUtil.createCellWithStyle(dataRow, 5, "-", bodyStyle);
-                }
+                Cell amountCell = dataRow.createCell(5);
+                amountCell.setCellValue(amount);
+                amountCell.setCellStyle(amount > 0 ? numberStyle : zeroDashNumberStyle);
             }
 
             Row totalRow = sheet.createRow(rowNum);
