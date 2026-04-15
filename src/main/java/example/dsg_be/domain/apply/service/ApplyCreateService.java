@@ -10,8 +10,6 @@ import example.dsg_be.domain.teacher.repository.TeacherRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.time.LocalDate;
-import java.time.LocalTime;
 
 @Service
 @RequiredArgsConstructor
@@ -24,15 +22,7 @@ public class ApplyCreateService {
         TeacherEntity teacher = teacherRepository.findById(request.getTeacherId())
                 .orElseThrow(() -> TeacherNotFoundException.EXCEPTION);
 
-        LocalDate today = LocalDate.now();
-        boolean alreadyApplied = applyRepository.existsByTeacherAndMealAndCreatedAtBetween(
-                teacher,
-                request.getMeal(),
-                today.atStartOfDay(),
-                today.atTime(LocalTime.MAX)
-        );
-
-        if (alreadyApplied) {
+        if (applyRepository.existsByTeacherAndApplyDate(teacher, request.getApplyDate())) {
             throw AlreadyAppliedException.EXCEPTION;
         }
 
@@ -40,6 +30,7 @@ public class ApplyCreateService {
                 .teacher(teacher)
                 .meal(request.getMeal())
                 .reason(request.getReason())
+                .applyDate(request.getApplyDate())
                 .build();
 
         applyRepository.save(applyEntity);
