@@ -3,13 +3,16 @@ package example.dsg_be.domain.apply.domain;
 import example.dsg_be.domain.teacher.domain.TeacherEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Getter
 @Table(name = "apply_tbl")
+@EntityListeners(AuditingEntityListener.class)
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ApplyEntity {
 
     @Id
@@ -31,6 +34,7 @@ public class ApplyEntity {
     @Column(name = "apply_date", nullable = false)
     private LocalDate applyDate;
 
+    @CreatedDate
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
@@ -40,6 +44,5 @@ public class ApplyEntity {
         this.meal = meal;
         this.reason = reason;
         this.applyDate = applyDate;
-        this.createdAt = LocalDateTime.now();
     }
 }
