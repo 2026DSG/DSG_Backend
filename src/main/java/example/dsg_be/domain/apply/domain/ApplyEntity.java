@@ -5,14 +5,14 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "apply_tbl")
 @EntityListeners(AuditingEntityListener.class)
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ApplyEntity {
 
     @Id
@@ -31,14 +31,18 @@ public class ApplyEntity {
     @Column(name = "reason", nullable = false)
     private String reason;
 
+    @Column(name = "date", nullable = false)
+    private LocalDate date;
+
     @CreatedDate
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
     @Builder
-    public ApplyEntity(TeacherEntity teacher, MealType meal, String reason) {
+    public ApplyEntity(TeacherEntity teacher, MealType meal, String reason, LocalDate date) {
         this.teacher = teacher;
         this.meal = meal;
         this.reason = reason;
+        this.date = date;
     }
 }

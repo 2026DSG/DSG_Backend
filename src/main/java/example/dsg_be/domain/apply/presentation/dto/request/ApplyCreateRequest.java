@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import java.time.LocalDate;
 
 @Getter
 @NoArgsConstructor
@@ -18,4 +19,7 @@ public class ApplyCreateRequest {
 
     @NotBlank(message = "신청 사유는 비어있을 수 없습니다")
     private String reason;
+
+    @NotNull(message = "신청 날짜는 필수입니다")
+    private LocalDate date;
 }

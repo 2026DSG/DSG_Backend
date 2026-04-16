@@ -3,6 +3,7 @@ package example.dsg_be.domain.apply.presentation.dto.response;
 import example.dsg_be.domain.apply.domain.ApplyEntity;
 import example.dsg_be.domain.apply.domain.MealType;
 import lombok.Getter;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -15,6 +16,7 @@ public class ApplyListResponse {
     private final String position;
     private final MealType meal;
     private final String reason;
+    private final LocalDate date;
     private final LocalDateTime createdAt;
 
     public ApplyListResponse(ApplyEntity applyEntity) {
@@ -25,6 +27,7 @@ public class ApplyListResponse {
         this.position = applyEntity.getTeacher().getPosition();
         this.meal = applyEntity.getMeal();
         this.reason = applyEntity.getReason();
+        this.date = applyEntity.getDate();
         this.createdAt = applyEntity.getCreatedAt();
     }
 }
