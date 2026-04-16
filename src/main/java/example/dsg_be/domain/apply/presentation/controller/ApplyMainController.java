@@ -6,8 +6,10 @@ import example.dsg_be.domain.apply.presentation.dto.response.ApplyListResponse;
 import example.dsg_be.domain.apply.service.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -27,8 +29,10 @@ public class ApplyMainController {
 
     @GetMapping("/apply")
     @ResponseStatus(HttpStatus.OK)
-    public List<ApplyListResponse> getList(@RequestParam MealType meal) {
-        return applyListReadService.execute(meal);
+    public List<ApplyListResponse> getList(
+            @RequestParam String meal,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        return applyListReadService.execute(MealType.from(meal), date);
     }
 
     @DeleteMapping("/apply/{apply-id}")
