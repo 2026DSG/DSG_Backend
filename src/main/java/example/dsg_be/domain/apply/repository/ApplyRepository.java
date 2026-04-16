@@ -11,10 +11,10 @@ import java.util.List;
 
 public interface ApplyRepository extends JpaRepository<ApplyEntity, Long> {
 
-    boolean existsByTeacherAndApplyDate(TeacherEntity teacher, LocalDate applyDate);
+    boolean existsByTeacherAndDate(TeacherEntity teacher, LocalDate date);
 
     @EntityGraph(attributePaths = "teacher")
-    List<ApplyEntity> findAllByMealAndApplyDateOrderByCreatedAtDesc(MealType meal, LocalDate applyDate);
+    List<ApplyEntity> findAllByMealAndDateOrderByCreatedAtDesc(MealType meal, LocalDate date);
 
     @EntityGraph(attributePaths = "teacher")
     List<ApplyEntity> findAllByCreatedAtBetweenOrderByCreatedAtAsc(

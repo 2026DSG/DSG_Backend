@@ -31,18 +31,18 @@ public class ApplyEntity {
     @Column(name = "reason", nullable = false)
     private String reason;
 
-    @Column(name = "apply_date", nullable = false)
-    private LocalDate applyDate;
+    @Column(name = "date", nullable = false)
+    private LocalDate date;
 
     @CreatedDate
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
     @Builder
-    public ApplyEntity(TeacherEntity teacher, MealType meal, String reason, LocalDate applyDate) {
+    public ApplyEntity(TeacherEntity teacher, MealType meal, String reason, LocalDate date) {
         this.teacher = teacher;
         this.meal = meal;
         this.reason = reason;
-        this.applyDate = applyDate;
+        this.date = date;
     }
 }

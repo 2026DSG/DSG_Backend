@@ -21,5 +21,5 @@ public class ApplyCreateRequest {
     private String reason;
 
     @NotNull(message = "신청 날짜는 필수입니다")
-    private LocalDate applyDate;
+    private LocalDate date;
 }

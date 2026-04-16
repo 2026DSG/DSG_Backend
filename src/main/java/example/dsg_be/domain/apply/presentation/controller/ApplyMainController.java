@@ -31,8 +31,8 @@ public class ApplyMainController {
     @ResponseStatus(HttpStatus.OK)
     public List<ApplyListResponse> getList(
             @RequestParam String meal,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate applyDate) {
-        return applyListReadService.execute(MealType.from(meal), applyDate);
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        return applyListReadService.execute(MealType.from(meal), date);
     }
 
     @DeleteMapping("/apply/{apply-id}")

@@ -16,8 +16,8 @@ public class ApplyListReadService {
     private final ApplyRepository applyRepository;
 
     @Transactional(readOnly = true)
-    public List<ApplyListResponse> execute(MealType meal, LocalDate applyDate) {
-        return applyRepository.findAllByMealAndApplyDateOrderByCreatedAtDesc(meal, applyDate)
+    public List<ApplyListResponse> execute(MealType meal, LocalDate date) {
+        return applyRepository.findAllByMealAndDateOrderByCreatedAtDesc(meal, date)
                 .stream()
                 .map(ApplyListResponse::new)
                 .toList();

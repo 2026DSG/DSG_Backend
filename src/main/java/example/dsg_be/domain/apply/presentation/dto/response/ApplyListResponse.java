@@ -16,7 +16,7 @@ public class ApplyListResponse {
     private final String position;
     private final MealType meal;
     private final String reason;
-    private final LocalDate applyDate;
+    private final LocalDate date;
     private final LocalDateTime createdAt;
 
     public ApplyListResponse(ApplyEntity applyEntity) {
@@ -27,7 +27,7 @@ public class ApplyListResponse {
         this.position = applyEntity.getTeacher().getPosition();
         this.meal = applyEntity.getMeal();
         this.reason = applyEntity.getReason();
-        this.applyDate = applyEntity.getApplyDate();
+        this.date = applyEntity.getDate();
         this.createdAt = applyEntity.getCreatedAt();
     }
 }

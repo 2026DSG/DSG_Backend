@@ -22,7 +22,7 @@ public class ApplyCreateService {
         TeacherEntity teacher = teacherRepository.findById(request.getTeacherId())
                 .orElseThrow(() -> TeacherNotFoundException.EXCEPTION);
 
-        if (applyRepository.existsByTeacherAndApplyDate(teacher, request.getApplyDate())) {
+        if (applyRepository.existsByTeacherAndDate(teacher, request.getDate())) {
             throw AlreadyAppliedException.EXCEPTION;
         }
 
@@ -30,7 +30,7 @@ public class ApplyCreateService {
                 .teacher(teacher)
                 .meal(request.getMeal())
                 .reason(request.getReason())
-                .applyDate(request.getApplyDate())
+                .date(request.getDate())
                 .build();
 
         applyRepository.save(applyEntity);
