@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -28,8 +29,8 @@ public class ApplyAdminController {
     private final ApplyAdminReadService applyAdminReadService;
 
     @GetMapping("/apply")
-    public List<ApplyListResponse> getApplyListOnAdmin() {
-        return applyAdminReadService.execute();
+    public List<ApplyListResponse> getApplyListOnAdmin(@RequestParam LocalDate date) {
+        return applyAdminReadService.execute(date);
     }
 
     @GetMapping("/apply/excel/monthly")

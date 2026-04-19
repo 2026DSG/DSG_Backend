@@ -21,4 +21,6 @@ public interface ApplyRepository extends JpaRepository<ApplyEntity, Long> {
             LocalDateTime start,
             LocalDateTime end
     );
+
+    List<ApplyEntity> findAllByDate(LocalDate date);
 }
