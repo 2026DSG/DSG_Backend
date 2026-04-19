@@ -22,5 +22,6 @@ public interface ApplyRepository extends JpaRepository<ApplyEntity, Long> {
             LocalDateTime end
     );
 
+    @EntityGraph(attributePaths = "teacher")
     List<ApplyEntity> findAllByDate(LocalDate date);
 }
