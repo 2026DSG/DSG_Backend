@@ -29,7 +29,7 @@ public class ApplyAdminController {
     private final ApplyAdminReadService applyAdminReadService;
 
     @GetMapping("/apply")
-    public List<ApplyListResponse> getApplyListOnAdmin(@RequestParam LocalDate date) {
+    public List<ApplyListResponse> getApplyListOnAdmin(@RequestParam(value = "date") LocalDate date) {
         return applyAdminReadService.execute(date);
     }
 
