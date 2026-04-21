@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
@@ -51,11 +52,22 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(CustomJwtException.class) // JWT Exception
-    public ResponseEntity<ErrorResponse> handleCustomJwtException(CustomJwtException e) {
-        log.warn("JWT Exception : {}", e.getMessage());
+    public ResponseEntity<ErrorResponse> handleCustomJwtException(CustomJwtException exception) {
+        log.warn("JWT Exception : {}", exception.getMessage());
 
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
-                .body(ErrorResponse.of(HttpStatus.UNAUTHORIZED.value(), e.getMessage()));
+                .body(ErrorResponse.of(HttpStatus.UNAUTHORIZED.value(), exception.getMessage()));
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<ErrorResponse> handleRequestParamException(
+            MissingServletRequestParameterException exception) {
+        log.error("MissingServletRequestParameterException : {}", exception.getMessage());
+
+        String message = "파라미터 값이 유효하지 않습니다";
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(ErrorResponse.of(HttpStatus.BAD_REQUEST.value(), message));
     }
 }

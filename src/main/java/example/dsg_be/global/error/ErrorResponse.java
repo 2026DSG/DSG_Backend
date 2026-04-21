@@ -6,11 +6,11 @@ import lombok.Getter;
 
 @Getter
 public class ErrorResponse {
-    private int status;
-    private String message;
+    private final int status;
+    private final String message;
 
     @Builder
-    public ErrorResponse(int status, String message) {
+    private ErrorResponse(int status, String message) {
         this.status = status;
         this.message = message;
     }
