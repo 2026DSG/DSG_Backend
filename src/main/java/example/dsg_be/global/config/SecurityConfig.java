@@ -15,6 +15,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import tools.jackson.databind.ObjectMapper;
 import java.util.Arrays;
 
 @Configuration
@@ -22,8 +23,9 @@ import java.util.Arrays;
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final JwtTokenProvider jwtTokenProvider;
+    private final ObjectMapper objectMapper;
 
-    @Bean
+    @Bean // https 배포시 삭제
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
@@ -78,7 +80,7 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.GET, "/admin/apply/excel/summary").hasAuthority("OFFICE")
                                 .anyRequest().authenticated()
                 )
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, objectMapper),
                         UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
