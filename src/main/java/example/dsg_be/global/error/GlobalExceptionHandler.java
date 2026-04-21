@@ -20,10 +20,9 @@ public class GlobalExceptionHandler {
         log.error("handleBusinessException: {}", exception.getMessage(), exception);
         ErrorCode errorCode = exception.getErrorCode(); // 설정한 ErrorCode 정보 가져오기
 
-        ErrorResponse responseEntityBody = ErrorResponse.of(errorCode);
         return ResponseEntity
                 .status(errorCode.getStatus())
-                .body(responseEntityBody);
+                .body(ErrorResponse.of(errorCode));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class) // Valid Exception
@@ -35,10 +34,9 @@ public class GlobalExceptionHandler {
                 .get(0)
                 .getDefaultMessage();
 
-        ErrorResponse responseEntityBody = ErrorResponse.of(HttpStatus.BAD_REQUEST.value(), errorMessage);
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(responseEntityBody);
+                .body(ErrorResponse.of(HttpStatus.BAD_REQUEST.value(), errorMessage));
     }
 
     @ExceptionHandler(MaxUploadSizeExceededException.class) // Excel Exception
@@ -47,20 +45,9 @@ public class GlobalExceptionHandler {
         log.error("파일 용량 초과: {}", exception.getMessage());
 
         String message = "업로드 가능한 파일 용량을 초과했습니다. (최대 1MB)";
-        ErrorResponse responseEntityBody = ErrorResponse.of(HttpStatus.BAD_REQUEST.value(), message);
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(responseEntityBody);
-    }
-
-    @ExceptionHandler(CustomJwtException.ExpiredException.class) // ExpiredException
-    public ResponseEntity<ErrorResponse> handleExpiredJwtException(
-            CustomJwtException.ExpiredException e) {
-        log.warn("만료된 JWT : {}", e.getMessage());
-
-        return ResponseEntity
-                .status(HttpStatus.UNAUTHORIZED)
-                .body(ErrorResponse.of(HttpStatus.UNAUTHORIZED.value(), e.getMessage()));
+                .body(ErrorResponse.of(HttpStatus.BAD_REQUEST.value(), message));
     }
 
     @ExceptionHandler(CustomJwtException.class) // JWT Exception
