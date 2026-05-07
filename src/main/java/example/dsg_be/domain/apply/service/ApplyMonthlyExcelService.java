@@ -118,7 +118,7 @@ public class ApplyMonthlyExcelService {
                     }
 
                     ExcelUtil.createCellWithStyle(dataRow, 6,
-                            rowAmount > 0 ? rowAmount + "원" : "", bodyStyle);
+                            rowAmount > 0 ? String.format("%,d", rowAmount) : "", bodyStyle);
                 }
 
                 Row subtotalRow = sheet.createRow(rowNum++);
@@ -128,7 +128,7 @@ public class ApplyMonthlyExcelService {
                 ExcelUtil.createCellWithStyle(subtotalRow, 3, "", bodyStyle);
                 ExcelUtil.createCellWithStyle(subtotalRow, 4, String.valueOf(dinnerCount), bodyStyle);
                 ExcelUtil.createCellWithStyle(subtotalRow, 5, String.valueOf(selfCount), bodyStyle);
-                ExcelUtil.createCellWithStyle(subtotalRow, 6, totalAmount + "원", bodyStyle);
+                ExcelUtil.createCellWithStyle(subtotalRow, 6, String.format("%,d", totalAmount), bodyStyle);
             }
 
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
