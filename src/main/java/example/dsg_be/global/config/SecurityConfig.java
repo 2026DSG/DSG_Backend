@@ -59,6 +59,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth ->
                         auth
                                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+
                                 // user
                                 .requestMatchers(HttpMethod.POST, "/main/login").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/main/refresh").permitAll()
