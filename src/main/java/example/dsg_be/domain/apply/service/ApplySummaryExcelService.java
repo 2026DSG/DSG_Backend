@@ -14,8 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.*;
 
@@ -30,11 +29,11 @@ public class ApplySummaryExcelService {
     @Transactional(readOnly = true)
     public byte[] execute(int year, int month) throws IOException {
         YearMonth yearMonth = YearMonth.of(year, month);
-        LocalDateTime start = yearMonth.atDay(1).atStartOfDay();
-        LocalDateTime end = yearMonth.atEndOfMonth().atTime(LocalTime.MAX);
+        LocalDate start = yearMonth.atDay(1);
+        LocalDate end = yearMonth.atEndOfMonth();
 
         List<ApplyEntity> applyList = applyRepository
-                .findAllByCreatedAtBetweenOrderByCreatedAtAsc(start, end);
+                .findAllByDateBetweenOrderByDateAscCreatedAtAsc(start, end);
 
         if (applyList.isEmpty()) {
             throw ApplyNotFoundException.EXCEPTION;

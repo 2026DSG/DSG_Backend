@@ -14,8 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -33,11 +32,11 @@ public class ApplyMonthlyExcelService {
     @Transactional(readOnly = true)
     public byte[] execute(int year, int month) throws IOException {
         YearMonth yearMonth = YearMonth.of(year, month);
-        LocalDateTime start = yearMonth.atDay(1).atStartOfDay();
-        LocalDateTime end = yearMonth.atEndOfMonth().atTime(LocalTime.MAX);
+        LocalDate start = yearMonth.atDay(1);
+        LocalDate end = yearMonth.atEndOfMonth();
 
         List<ApplyEntity> applyList = applyRepository
-                .findAllByCreatedAtBetweenOrderByCreatedAtAsc(start, end);
+                .findAllByDateBetweenOrderByDateAscCreatedAtAsc(start, end);
 
         if (applyList.isEmpty()) {
             throw ApplyNotFoundException.EXCEPTION;
@@ -107,7 +106,7 @@ public class ApplyMonthlyExcelService {
                     ExcelUtil.createCellWithStyle(dataRow, 0, i == 0 ? teacher.getDepartment() : "", bodyStyle);
                     ExcelUtil.createCellWithStyle(dataRow, 1, i == 0 ? teacher.getPosition() : "", bodyStyle);
                     ExcelUtil.createCellWithStyle(dataRow, 2, i == 0 ? teacher.getName() : "", bodyStyle);
-                    ExcelUtil.createCellWithStyle(dataRow, 3, apply.getCreatedAt().toLocalDate().toString(), bodyStyle);
+                    ExcelUtil.createCellWithStyle(dataRow, 3, apply.getDate().toString(), bodyStyle);
 
                     if (isSelf) {
                         ExcelUtil.createCellWithStyle(dataRow, 4, "", bodyStyle);
