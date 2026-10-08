@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface ApplyRepository extends JpaRepository<ApplyEntity, Long> {
 
-    boolean existsByTeacherAndDate(TeacherEntity teacher, LocalDate date);
+    boolean existsByTeacherAndDateAndMealIn(TeacherEntity teacher, LocalDate date, List<MealType> meals);
 
     @EntityGraph(attributePaths = "teacher")
     List<ApplyEntity> findAllByMealAndDateOrderByCreatedAtDesc(MealType meal, LocalDate date);
