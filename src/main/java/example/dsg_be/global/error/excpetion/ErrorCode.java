@@ -22,7 +22,7 @@ public enum ErrorCode {
     //apply
     Invalid_Meal_Type_Exception(400, "유효하지 않은 급식 유형입니다."),
     Apply_Not_Found_Exception(404, "해당 신청 내역을 찾을 수 없습니다."),
-    Already_Applied_Exception(409, "이미 해당 날짜에 동일한 급식 신청이 존재합니다.");
+    Already_Applied_Exception(409, "이미 해당 날짜에 같은 끼니(중식/석식) 신청이 존재합니다.");
 
     private final int status;
     private final String message;
